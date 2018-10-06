@@ -20,8 +20,10 @@ def rescale_hypergrid(hypergrid: np.ndarray,
     """
 
     n_hyper = len(hyperparam_config)
+    assert n_hyper == hypergrid.shape[1], "The Grid must be of dimensions (n_combinations, n_hyperparams)"
+
     for idx in range(n_hyper):
-        hypergrid[idx, :] = rescale_vector(hypergrid[idx, :],
+        hypergrid[:, idx] = rescale_vector(hypergrid[:, idx],
                                            hyperparam_config[idx].lower_bound,
                                            hyperparam_config[idx].upper_bound,
                                            newlow,
