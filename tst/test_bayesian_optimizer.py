@@ -4,9 +4,9 @@ import unittest
 from bayesian_optimizer.gaussian_process import GaussianProcessRegression
 from bayesian_optimizer.hyper_parameter import HyperParameter
 from bayesian_optimizer.kernels import rbf
-from bayesian_optimizer.random_optimizer import not_in_array, get_hypergrid, OptimizerError
-from bayesian_optimizer.bayesian_optimizer import get_new_unique_point, propose_points
-from bayesian_optimizer.utilities import debugtool
+from bayesian_optimizer.hypergrid import not_in_array, get_hypergrid
+from bayesian_optimizer.bayesian_optimizer import _get_new_unique_point, propose_points
+from bayesian_optimizer.utilities import debugtool, OptimizerError
 
 
 class BayesianOptimizerTest(unittest.TestCase):
@@ -66,7 +66,7 @@ class BayesianOptimizerTest(unittest.TestCase):
                            [0., 0.],
                            [1., 2.]])
         values = np.array([1, 2, 3], dtype=float)
-        result = propose_points(tested_points, values, hyperparam_config, 9, 123)
+        result = propose_points(tested_points, values, hyperparam_config, 9, seed=123)
         # print(repr(result))
         np.testing.assert_almost_equal(result, target, decimal=5)
 
@@ -75,13 +75,13 @@ class BayesianOptimizerTest(unittest.TestCase):
                            [3., 4.],
                            [0., 4.]])
         values = np.array([1, 2, 3], dtype=float)
-        result = propose_points(tested_points, values, hyperparam_config, 4, 123)
+        result = propose_points(tested_points, values, hyperparam_config, 4, seed=123)
         # print(repr(result))
         np.testing.assert_almost_equal(result, target, decimal=5)
 
         # Check error
         with self.assertRaises(OptimizerError):
-            propose_points(tested_points, values, hyperparam_config, 20, 123)
+            propose_points(tested_points, values, hyperparam_config, 20, seed=123)
 
     def test_get_new_unique_point(self):
         hyperparam_config = [
@@ -107,9 +107,9 @@ class BayesianOptimizerTest(unittest.TestCase):
         gp.initialize(grid)
 
         for idx in range(100):
-            self.assertTrue(not_in_array(get_new_unique_point(previous_points, grid, gp, 100), previous_points))
+            self.assertTrue(not_in_array(_get_new_unique_point(previous_points, grid, gp, 100), previous_points))
 
         # Check error
         gp.initialize(previous_points)
         with self.assertRaises(OptimizerError):
-            get_new_unique_point(previous_points, previous_points, gp)
+            _get_new_unique_point(previous_points, previous_points, gp)

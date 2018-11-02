@@ -59,3 +59,7 @@ def f(x):
     return x + x * x
 f = logged(f)
 '''
+
+
+class OptimizerError(RuntimeError):
+    pass

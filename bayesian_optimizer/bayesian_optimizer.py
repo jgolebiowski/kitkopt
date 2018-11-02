@@ -3,7 +3,8 @@ from typing import List, Dict
 
 from bayesian_optimizer.gaussian_process import GaussianProcessRegression
 from bayesian_optimizer.kernels import rbf
-from bayesian_optimizer.random_optimizer import not_in_array, get_untested_hypergrid, OptimizerError
+from bayesian_optimizer.utilities import OptimizerError
+from bayesian_optimizer.hypergrid import not_in_array, get_hypergrid, prune_hypergrid
 from bayesian_optimizer.rescale import rescale_hypergrid, rescale_vector
 from .hyper_parameter import HyperParameter
 
@@ -11,10 +12,10 @@ MIN_VALUE = -1
 MAX_VALUE = 1
 
 
-def get_new_unique_point(new_points_so_far: np.ndarray,
-                         hypergrid: np.ndarray,
-                         gp: GaussianProcessRegression,
-                         max_iter: int = 100) -> np.ndarray:
+def _get_new_unique_point(new_points_so_far: np.ndarray,
+                          hypergrid: np.ndarray,
+                          gp: GaussianProcessRegression,
+                          max_iter: int = 100) -> np.ndarray:
     """
     Propose a new point, different from the ones proposed before
 
@@ -65,7 +66,8 @@ def propose_points(tested_points: np.ndarray,
                                    *gp_settings["kernel_params"],
                                    noise=gp_settings["noise"])
 
-    hypergrid = get_untested_hypergrid(hyperparams_config, tested_points)
+    hypergrid = get_hypergrid(hyperparams_config)
+    hypergrid = prune_hypergrid(hypergrid, tested_points)
     rescaled_hypergrid = rescale_hypergrid(hypergrid.copy(), hyperparams_config)
     if tested_values.ndim == 1:
         tested_values = tested_values.reshape((-1, 1))
@@ -83,6 +85,6 @@ def propose_points(tested_points: np.ndarray,
     new_points = np.ones((num_points, len(hyperparams_config)), dtype=float) * maxvalue
 
     for idx in range(num_points):
-        new_points[idx, :] = get_new_unique_point(new_points, hypergrid, gp)
+        new_points[idx, :] = _get_new_unique_point(new_points, hypergrid, gp)
 
     return new_points

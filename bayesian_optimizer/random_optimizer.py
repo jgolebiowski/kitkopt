@@ -1,81 +1,12 @@
 import numpy as np
-import itertools
-import numba
-from typing import List
+from typing import List, Callable, Tuple
 
+from bayesian_optimizer.hypergrid import not_in_array, get_hypergrid, prune_hypergrid
+from bayesian_optimizer.utilities import OptimizerError
 from .hyper_parameter import HyperParameter
 
 
-@numba.jit(
-    [
-        numba.boolean(numba.float64[:], numba.float64[:, :], numba.float64),
-        numba.boolean(numba.float32[:], numba.float32[:, :], numba.float32)
-    ], nopython=False
-)
-def _numba_not_in_array(vector: np.ndarray, array: np.ndarray, delta: float = 1e-4) -> bool:
-    """
-    Check if a given vector is NOT a row of a given array
-    """
-    diff = np.abs(array - vector)
-    for idx in range(array.shape[0]):
-        localdiff = np.max(diff[idx, :])
-        if localdiff < delta:
-            return False
-
-    return True
-
-
-def not_in_array(vector: np.ndarray, array: np.ndarray, delta: float = 1e-4) -> bool:
-    """
-    Check if a given vector is NOT a row of a given array
-
-
-    :param vector: vector in shape (dim1, )
-    :param array: array in shape (dim2, dim1)
-    :param delta: delta used to compute float equality
-    :return: True if a given vector is NOT a row of a given array
-    """
-
-    if len(array) == 0 or len(vector) == 0:
-        return False
-
-    try:
-        return _numba_not_in_array(vector, array, delta)
-    except TypeError:
-        diff = np.min(np.max(np.abs(vector - array), axis=1))
-        return (diff > delta)
-
-
-def get_hypergrid(hyperparams_config: List[HyperParameter]) -> np.ndarray:
-    """
-    Return a grid with all potential hyperparameter combinations
-
-    :param hyperparams_config: List of hyperparameters
-    :return: grid with possible combinations
-    """
-    hypervalues = [
-        np.arange(hyperparam.lower_bound, hyperparam.upper_bound + hyperparam.stepsize / 2, hyperparam.stepsize)
-        for hyperparam in hyperparams_config
-    ]
-    potential_points = [item for item in itertools.product(*hypervalues)]
-    potential_points = np.array(potential_points, dtype=float)
-    return potential_points
-
-
-def get_untested_hypergrid(hyperparams_config: List[HyperParameter], tested_points: np.ndarray) -> np.ndarray:
-    """
-    Get a grid of previously untested points
-
-    :param hyperparams_config: List of hyperparameters
-    :param tested_points: previously tested points with dims (n_points, n_hyperparameters)
-    :return: grid with previously untested combinations
-    """
-    hypergrid = get_hypergrid(hyperparams_config)
-    mask = [not_in_array(potential_point, tested_points) for potential_point in hypergrid]
-    return hypergrid[mask]
-
-
-def get_new_unique_point(new_points_so_far: np.ndarray, hypergrid: np.ndarray, max_iter: int = 100) -> np.ndarray:
+def _get_new_unique_point(new_points_so_far: np.ndarray, hypergrid: np.ndarray, max_iter: int = 100) -> np.ndarray:
     """
     Propose a new point, different from the ones proposed before
 
@@ -111,15 +42,37 @@ def propose_points(tested_points: np.ndarray,
     if seed is not None:
         np.random.seed(seed)
 
-    hypergrid = get_untested_hypergrid(hyperparams_config, tested_points)
+    hypergrid = get_hypergrid(hyperparams_config)
+    hypergrid = prune_hypergrid(hypergrid, tested_points)
     maxvalue = hyperparams_config[0].upper_bound + 1
     new_points = np.ones((num_points, len(hyperparams_config)), dtype=float) * maxvalue
 
     for idx in range(num_points):
-        new_points[idx, :] = get_new_unique_point(new_points, hypergrid)
+        new_points[idx, :] = _get_new_unique_point(new_points, hypergrid)
 
     return new_points
 
 
-class OptimizerError(RuntimeError):
+def optimize_function(function: Callable,
+                      hyperparams_config: List[HyperParameter],
+                      extra_function_args: Tuple,
+                      tolerance: float = 1e-2,
+                      seed: int = None) -> Tuple[np.ndarray, float]:
+    """
+    Find the minimum of a function
+
+    :param function: Function to be optimized. It will be called as ``f(x, *args)``,
+        where ``x`` is the argument in the form of a 1-D array and ``args``
+        is a  tuple of any additional fixed parameters needed to completely specify the function.
+    :param hyperparams_config: List of hyperparameters
+    :param tolerance: Convergence tolerance
+    :param seed: randomizer seed
+
+    :return:
+        - Solution (best point)
+        - Function value at best point
+    """
     pass
+    # HERE just operate on rescaed hypergrid all the time and onle back-scale it once the result is done
+    # this will make the propose-points function operate on rescaled grid and only responsible for setting up
+    ### the GP and proposing points from it, higher level routines take care of the scaling buisness.
