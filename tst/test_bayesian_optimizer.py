@@ -5,11 +5,27 @@ from bayesian_optimizer.gaussian_process import GaussianProcessRegression
 from bayesian_optimizer.hyper_parameter import HyperParameter
 from bayesian_optimizer.kernels import rbf
 from bayesian_optimizer.hypergrid import not_in_array, get_hypergrid
-from bayesian_optimizer.bayesian_optimizer import _get_new_unique_point, propose_points
+from bayesian_optimizer.bayesian_optimizer import _get_new_unique_point, propose_points, minimize_function
 from bayesian_optimizer.utilities import debugtool, OptimizerError
 
 
 class BayesianOptimizerTest(unittest.TestCase):
+    def test_minimize(self):
+        def funct(x):
+            return np.sum(np.square(x))
+
+        hyperparam_config = [
+            HyperParameter(-5, 5, 1),
+            HyperParameter(-5, 5, 1)
+        ]
+
+        best_point, best_value = minimize_function(funct, hyperparam_config,
+                                                   extra_function_args=(),
+                                                   tolerance=1e-2,
+                                                   max_iterations=30,
+                                                   seed=123)
+        np.testing.assert_allclose(best_point, np.array([0, 0]), atol=1e-5)
+        np.testing.assert_allclose(best_value, np.array([0]), atol=1e-5)
 
     def test_optimizer(self):
         hyperparam_config = [
@@ -25,12 +41,12 @@ class BayesianOptimizerTest(unittest.TestCase):
             [1, 1]
         ], dtype=float)
         values = np.array([
-            0,
-            0,
-            0,
-            0,
-            0,
-            2
+            2,
+            2,
+            2,
+            2,
+            2,
+            0
         ], dtype=float)
         gp_settings = dict(
             kernel=rbf,
@@ -56,27 +72,28 @@ class BayesianOptimizerTest(unittest.TestCase):
             [2, 0],
             [1, 4],
         ], dtype=float)
-        target = np.array([[3., 0.],
-                           [1., 0.],
-                           [3., 4.],
-                           [0., 4.],
-                           [2., 2.],
-                           [2., 4.],
-                           [3., 2.],
+        target = np.array([[2., 4.],
                            [0., 0.],
-                           [1., 2.]])
+                           [3., 0.],
+                           [1., 2.],
+                           [3., 2.],
+                           [1., 0.],
+                           [0., 4.],
+                           [3., 4.],
+                           [2., 2.]])
         values = np.array([1, 2, 3], dtype=float)
         result = propose_points(tested_points, values, hyperparam_config, 9, seed=123)
         # print(repr(result))
         np.testing.assert_almost_equal(result, target, decimal=5)
 
-        target = np.array([[3., 0.],
-                           [1., 0.],
-                           [3., 4.],
-                           [0., 4.]])
+        target = np.array([[2., 4.],
+                           [0., 0.],
+                           [3., 0.],
+                           [1., 2.]])
         values = np.array([1, 2, 3], dtype=float)
         result = propose_points(tested_points, values, hyperparam_config, 4, seed=123)
         # print(repr(result))
+
         np.testing.assert_almost_equal(result, target, decimal=5)
 
         # Check error

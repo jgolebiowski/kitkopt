@@ -12,7 +12,7 @@ def debugtool(some_function):
     @functools.wraps(some_function)
     def wrapper(*args, **kwargs):
         try:
-            some_function(*args, **kwargs)
+            return some_function(*args, **kwargs)
         except:
             import pdb
             type, value, traceback = sys.exc_info()
