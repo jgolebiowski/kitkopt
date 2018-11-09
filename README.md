@@ -45,8 +45,9 @@ best_point, best_value = minimize_function(funct, hyperparameters_config,
 
 ### Dependencies
 * [Python] 3.6 or above
-* [numpy] - Linear algebra for Python
-* [scipy] - Scientific Python library
+* [NumPy] - Linear algebra for Python
+* [SciPy] - Scientific Python library
+* [Numba] - JIT compilation for Python
 
 
 
@@ -62,3 +63,4 @@ MIT
    [numpy]: <http://www.numpy.org/>
    [python]: <https://www.python.org/>
    [scipy]: <https://www.scipy.org/index.html>
+   [numba]: <https://numba.pydata.org/numba-doc/dev/index.html>
