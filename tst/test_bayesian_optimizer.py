@@ -22,7 +22,7 @@ class BayesianOptimizerTest(unittest.TestCase):
         best_point, best_value = minimize_function(funct, hyperparam_config,
                                                    extra_function_args=(),
                                                    tolerance=1e-2,
-                                                   max_iterations=30,
+                                                   max_iterations=100,
                                                    seed=123)
         np.testing.assert_allclose(best_point, np.array([0, 0]), atol=1e-5)
         np.testing.assert_allclose(best_value, np.array([0]), atol=1e-5)
@@ -50,7 +50,7 @@ class BayesianOptimizerTest(unittest.TestCase):
         ], dtype=float)
         gp_settings = dict(
             kernel=rbf,
-            kernel_params=(0.1, 0.25),
+            kernel_params=(0.1, 0.2),
             noise=1e-6
         )
 

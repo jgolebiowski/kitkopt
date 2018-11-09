@@ -71,5 +71,8 @@ def prune_hypergrid(hypergrid: np.ndarray, tested_points: np.ndarray) -> np.ndar
     :param tested_points: previously tested points with dims (n_points, n_hyperparameters)
     :return: grid with previously untested combinations
     """
+    if len(tested_points) == 0:
+        return hypergrid
+
     mask = [not_in_array(potential_point, tested_points) for potential_point in hypergrid]
     return hypergrid[mask]

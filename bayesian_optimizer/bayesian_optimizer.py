@@ -28,8 +28,8 @@ def _get_new_unique_point(new_points_so_far: np.ndarray,
 
     for idx in range(max_iter):
         sample = gp.sample()
-        maxidx = np.argmin(sample)
-        proposed_point = hypergrid[maxidx, :]
+        minid = np.argmin(sample)
+        proposed_point = hypergrid[minid, :]
         if not_in_array(proposed_point, new_points_so_far):
             return proposed_point
     raise OptimizerError("Could not find a new unique point within iteration number!")
@@ -62,6 +62,8 @@ def _propose_new_points(
                                    noise=gp_settings["noise"])
 
     hypergrid = prune_hypergrid(hypergrid, last_iteration_points)
+    if len(hypergrid) == 0:
+        raise OptimizerError("All potential points were already tested!")
     rescaled_hypergrid = rescale_hypergrid(hypergrid.copy(), hyperparams_config)
 
     if tested_values.ndim == 1:
@@ -164,19 +166,21 @@ def minimize_function(function: Callable,
             noise=1e-6
         )
 
+    # ------ Define the initial grid
     hypergrid = get_hypergrid(hyperparams_config)
     tested_points = np.empty((0, len(hyperparams_config)))
     tested_values = np.empty((0, 1))
     maxvalue = hyperparams_config[0].upper_bound + 1
 
+    # ------ Define useful constants
     old_minimum = np.inf
     num_points = 1
-    new_points = np.ones((num_points, len(hyperparams_config)), dtype=float) * maxvalue
+    new_points = np.empty((0, len(hyperparams_config)))
 
-    if (len(hypergrid) < max_iterations):
-        max_iterations = len(hypergrid)
-
+    max_iterations = min(len(hypergrid), max_iterations)
+    stopping_counter = 0
     for idx in range(max_iterations):
+        # ------ Ask the optimizer for new points
         hypergrid, new_points = _propose_new_points(
             new_points,
             tested_points,
@@ -193,8 +197,16 @@ def minimize_function(function: Callable,
         tested_points = np.concatenate((tested_points, new_points), axis=0)
         tested_values = np.concatenate((tested_values, new_values), axis=0)
 
+        # ------ Compute the stopping criterion
         if np.abs(old_minimum - np.min(tested_values)) < tolerance:
+            stopping_counter += 1
+        else:
+            stopping_counter = 0
+
+        if stopping_counter >= 10:
             break
+
+        old_minimum = np.min(tested_values)
 
     best_point = np.argmin(tested_values, axis=0).item()
     return tested_points[best_point], tested_values[best_point]
