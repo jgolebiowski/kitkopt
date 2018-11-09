@@ -25,8 +25,8 @@ def main():
     num_points = 4
 
     # ------ Ask the optimizer for new points
-    result = propose_points(tested_points, values, hyperparam_config,
-                            num_points=num_points, seed=123)
+    new_points = propose_points(tested_points, values, hyperparam_config,
+                                num_points=num_points, seed=123)
 
     # ------ pritn the proposed points
     print(result)

@@ -3,10 +3,10 @@ Simple, pure python, gradient-free bayesian optimiser for black box functions. T
 ##### Proposing new points based on previous observations in a stateless fasion:
 ```python
 # ------ Ask the optimizer for new points
-result = propose_points(tested_points,
-                        tested_values,
-                        hyperparameters_config,
-                        num_points=num_points)
+new_points = propose_points(tested_points,
+                            tested_values,
+                            hyperparameters_config,
+                            num_points=num_points)
 ```
 ##### Function optimisation:
 ```python
@@ -44,7 +44,7 @@ best_point, best_value = minimize_function(funct, hyperparameters_config,
 ```
 
 ### Dependencies
-* [Python] 3.5 or above
+* [Python] 3.6 or above
 * [numpy] - Linear algebra for Python
 * [scipy] - Scientific Python library
 
