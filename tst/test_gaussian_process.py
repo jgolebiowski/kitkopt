@@ -1,7 +1,7 @@
 import numpy as np
 import unittest
-from bayesian_optimizer.kernels import rbf
-from bayesian_optimizer.gaussian_process import GaussianProcessRegression
+from blackop.kernels import rbf
+from blackop.gaussian_process import GaussianProcessRegression
 
 
 class GaussianProcessTest(unittest.TestCase):

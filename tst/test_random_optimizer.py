@@ -1,11 +1,11 @@
 import numpy as np
 import unittest
 
-from bayesian_optimizer.hyper_parameter import HyperParameter
-from bayesian_optimizer.random_optimizer import propose_points, \
+from blackop.hyper_parameter import HyperParameter
+from blackop.random_optimizer import propose_points, \
     _get_new_unique_point, minimize_function
-from bayesian_optimizer.hypergrid import not_in_array, get_hypergrid, prune_hypergrid
-from bayesian_optimizer.utilities import debugtool, OptimizerError
+from blackop.hypergrid import not_in_array, get_hypergrid, prune_hypergrid
+from blackop.utilities import debugtool, OptimizerError
 
 
 class RandomOptimizerTest(unittest.TestCase):

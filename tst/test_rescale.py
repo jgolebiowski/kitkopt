@@ -1,8 +1,8 @@
 import numpy as np
 import unittest
 
-from bayesian_optimizer.hyper_parameter import HyperParameter
-from bayesian_optimizer.rescale import rescale_vector, rescale_hypergrid
+from blackop.hyper_parameter import HyperParameter
+from blackop.rescale import rescale_vector, rescale_hypergrid
 
 
 class RescaleTest(unittest.TestCase):

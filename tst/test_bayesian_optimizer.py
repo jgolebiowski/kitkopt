@@ -1,12 +1,12 @@
 import numpy as np
 import unittest
 
-from bayesian_optimizer.gaussian_process import GaussianProcessRegression
-from bayesian_optimizer.hyper_parameter import HyperParameter
-from bayesian_optimizer.kernels import rbf
-from bayesian_optimizer.hypergrid import not_in_array, get_hypergrid
-from bayesian_optimizer.bayesian_optimizer import _get_new_unique_point, propose_points, minimize_function
-from bayesian_optimizer.utilities import debugtool, OptimizerError
+from blackop.gaussian_process import GaussianProcessRegression
+from blackop.hyper_parameter import HyperParameter
+from blackop.kernels import rbf
+from blackop.hypergrid import not_in_array, get_hypergrid
+from blackop.bayesian_optimizer import _get_new_unique_point, propose_points, minimize_function
+from blackop.utilities import debugtool, OptimizerError
 
 
 class BayesianOptimizerTest(unittest.TestCase):

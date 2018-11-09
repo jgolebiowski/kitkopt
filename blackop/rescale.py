@@ -1,6 +1,6 @@
 import numpy as np
 from typing import List
-from bayesian_optimizer.hyper_parameter import HyperParameter
+from blackop.hyper_parameter import HyperParameter
 
 TOL = 1e-12
 

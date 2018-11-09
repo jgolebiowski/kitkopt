@@ -1,8 +1,8 @@
 import numpy as np
 
-from bayesian_optimizer.bayesian_optimizer import propose_points
-from bayesian_optimizer.hyper_parameter import HyperParameter
-from bayesian_optimizer.kernels import rbf
+from blackop.bayesian_optimizer import propose_points
+from blackop.hyper_parameter import HyperParameter
+from blackop.kernels import rbf
 
 
 def main():

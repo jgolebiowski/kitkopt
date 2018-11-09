@@ -1,12 +1,12 @@
 import numpy as np
 from typing import List, Dict, Tuple, Callable
 
-from bayesian_optimizer.gaussian_process import GaussianProcessRegression
-from bayesian_optimizer.kernels import rbf
-from bayesian_optimizer.utilities import OptimizerError
-from bayesian_optimizer.hypergrid import not_in_array, get_hypergrid, prune_hypergrid
-from bayesian_optimizer.rescale import rescale_hypergrid, rescale_vector
-from .hyper_parameter import HyperParameter
+from blackop.gaussian_process import GaussianProcessRegression
+from blackop.kernels import rbf
+from blackop.utilities import OptimizerError
+from blackop.hypergrid import not_in_array, get_hypergrid, prune_hypergrid
+from blackop.rescale import rescale_hypergrid, rescale_vector
+from blackop.hyper_parameter import HyperParameter
 
 MIN_VALUE = -1
 MAX_VALUE = 1

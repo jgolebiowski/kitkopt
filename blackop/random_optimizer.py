@@ -1,9 +1,9 @@
 import numpy as np
 from typing import List, Callable, Tuple
 
-from bayesian_optimizer.hypergrid import not_in_array, get_hypergrid, prune_hypergrid
-from bayesian_optimizer.utilities import OptimizerError, debugtool
-from .hyper_parameter import HyperParameter
+from blackop.hypergrid import not_in_array, get_hypergrid, prune_hypergrid
+from blackop.utilities import OptimizerError, debugtool
+from blackop.hyper_parameter import HyperParameter
 
 
 def _get_new_unique_point(new_points_so_far: np.ndarray, hypergrid: np.ndarray, max_iter: int = 100) -> np.ndarray:

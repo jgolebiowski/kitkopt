@@ -4,7 +4,7 @@ from typing import List
 import numba
 import numpy as np
 
-from bayesian_optimizer.hyper_parameter import HyperParameter
+from blackop.hyper_parameter import HyperParameter
 
 
 @numba.jit(

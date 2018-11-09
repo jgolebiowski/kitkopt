@@ -1,6 +1,6 @@
 import numpy as np
 import unittest
-from bayesian_optimizer.kernels import poly_kernel, rbf
+from blackop.kernels import poly_kernel, rbf
 
 
 class KernelTest(unittest.TestCase):

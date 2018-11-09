@@ -1,6 +1,7 @@
-# bayesian-optimizer
-Simple, pure python, gradient-free bayesian optimiser for black box functions. This package supports
-##### Proposing new points based on previous observations in a stateless fasion:
+# BLACK box functions OPtimizer (blackop)
+Simple, pure python, gradient-free bayesian optimiser for black box functions.
+This package supports:
+##### Proposing new points based on previous observations in a stateless fasion
 ```python
 # ------ Ask the optimizer for new points
 new_points = propose_points(tested_points,
@@ -8,7 +9,8 @@ new_points = propose_points(tested_points,
                             hyperparameters_config,
                             num_points=num_points)
 ```
-##### Function optimisation:
+
+##### Function optimisation
 ```python
 # ------ Find the minimum and the value at the minumum
 best_point, best_value = minimize_function(function2minimize,
@@ -17,15 +19,15 @@ best_point, best_value = minimize_function(function2minimize,
                                            tolerance=1e-2,
                                            max_iterations=100)
 ```
-for optimizers based on uniform distribution (random_optimizer) and a multi-varied gaussian based on a Gaussian Process Regressor (bayesian_optimizer). See the examples directory for more usecases.
+Currently supported optimizers are based on sampling from a uniform distribution (random_optimizer) and a thompson sampling from a multi-varied gaussian based on a Gaussian Process Regressor (bayesian_optimizer). See the **examples** directory for more use-cases.
 
 ## Simple Example
-The most simple case for function mimization involves (examples/bayesian-minimize)
+The simplest application to function mimization involves (examples/bayesian-minimize)
 
 ```python
 import numpy as np
-from bayesian_optimizer.bayesian_optimizer import minimize_function
-from bayesian_optimizer.hyper_parameter import HyperParameter
+from blackop.bayesian_optimizer import minimize_function
+from blackop.hyper_parameter import HyperParameter
 
 def funct(x):
     return np.sum(np.square(x))
