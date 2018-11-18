@@ -1,7 +1,7 @@
 import numpy as np
 import unittest
-from blackop.kernels import rbf
-from blackop.gaussian_process import GaussianProcessRegression
+from kitkopt.kernels import rbf
+from kitkopt.gaussian_process import GaussianProcessRegression
 
 
 class GaussianProcessTest(unittest.TestCase):

@@ -1,4 +1,4 @@
-# BLACK box functions OPtimizer (blackop)
+# Kitkopt: Gradient free functions optimizer
 Simple, pure python, gradient-free bayesian optimiser for black box functions.
 This package supports:
 ##### Proposing new points based on previous observations in a stateless fasion
@@ -26,8 +26,8 @@ The simplest application to function mimization involves (examples/bayesian-mini
 
 ```python
 import numpy as np
-from blackop.bayesian_optimizer import minimize_function
-from blackop.hyper_parameter import HyperParameter
+from kitkopt.bayesian_optimizer import minimize_function
+from kitkopt.hyper_parameter import HyperParameter
 
 def funct(x):
     return np.sum(np.square(x))

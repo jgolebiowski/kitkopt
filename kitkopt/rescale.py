@@ -1,6 +1,6 @@
 import numpy as np
 from typing import List
-from blackop.hyper_parameter import HyperParameter
+from kitkopt.hyper_parameter import HyperParameter
 
 TOL = 1e-12
 

@@ -1,8 +1,8 @@
 import numpy as np
 import unittest
 
-from blackop.hyper_parameter import HyperParameter
-from blackop.rescale import rescale_vector, rescale_hypergrid
+from kitkopt.hyper_parameter import HyperParameter
+from kitkopt.rescale import rescale_vector, rescale_hypergrid
 
 
 class RescaleTest(unittest.TestCase):

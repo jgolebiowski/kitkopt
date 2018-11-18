@@ -1,9 +1,9 @@
 import numpy as np
 from typing import List, Callable, Tuple
 
-from blackop.hypergrid import not_in_array, get_hypergrid, prune_hypergrid
-from blackop.utilities import OptimizerError, debugtool
-from blackop.hyper_parameter import HyperParameter
+from kitkopt.hypergrid import not_in_array, get_hypergrid, prune_hypergrid
+from kitkopt.utilities import OptimizerError, debugtool
+from kitkopt.hyper_parameter import HyperParameter
 
 
 def _get_new_unique_point(new_points_so_far: np.ndarray, hypergrid: np.ndarray, max_iter: int = 100) -> np.ndarray:

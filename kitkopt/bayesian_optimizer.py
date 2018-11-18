@@ -1,12 +1,12 @@
 import numpy as np
 from typing import List, Dict, Tuple, Callable
 
-from blackop.gaussian_process import GaussianProcessRegression
-from blackop.kernels import rbf
-from blackop.utilities import OptimizerError
-from blackop.hypergrid import not_in_array, get_hypergrid, prune_hypergrid
-from blackop.rescale import rescale_hypergrid, rescale_vector
-from blackop.hyper_parameter import HyperParameter
+from kitkopt.gaussian_process import GaussianProcessRegression
+from kitkopt.kernels import rbf
+from kitkopt.utilities import OptimizerError
+from kitkopt.hypergrid import not_in_array, get_hypergrid, prune_hypergrid
+from kitkopt.rescale import rescale_hypergrid, rescale_vector
+from kitkopt.hyper_parameter import HyperParameter
 
 MIN_VALUE = -1
 MAX_VALUE = 1

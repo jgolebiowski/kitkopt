@@ -1,6 +1,6 @@
 import numpy as np
 import unittest
-from blackop.kernels import poly_kernel, rbf
+from kitkopt.kernels import poly_kernel, rbf
 
 
 class KernelTest(unittest.TestCase):

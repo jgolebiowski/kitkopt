@@ -1,8 +1,8 @@
 import numpy as np
 
-from blackop.random_optimizer import minimize_function
-from blackop.hyper_parameter import HyperParameter
-from blackop.kernels import rbf
+from kitkopt.random_optimizer import minimize_function
+from kitkopt.hyper_parameter import HyperParameter
+from kitkopt.kernels import rbf
 
 
 def funct(x):

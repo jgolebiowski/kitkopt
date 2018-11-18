@@ -1,9 +1,9 @@
 import numpy as np
 import unittest
 
-from blackop.hyper_parameter import HyperParameter
-from blackop.hypergrid import not_in_array, get_hypergrid, prune_hypergrid
-from blackop.utilities import debugtool, OptimizerError
+from kitkopt.hyper_parameter import HyperParameter
+from kitkopt.hypergrid import not_in_array, get_hypergrid, prune_hypergrid
+from kitkopt.utilities import debugtool, OptimizerError
 
 
 class HypergridTest(unittest.TestCase):

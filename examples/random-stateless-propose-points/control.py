@@ -1,8 +1,8 @@
 import numpy as np
 
-from blackop.random_optimizer import propose_points
-from blackop.hyper_parameter import HyperParameter
-from blackop.kernels import rbf
+from kitkopt.random_optimizer import propose_points
+from kitkopt.hyper_parameter import HyperParameter
+from kitkopt.kernels import rbf
 
 
 def main():

@@ -1,11 +1,11 @@
 import numpy as np
 import unittest
 
-from blackop.hyper_parameter import HyperParameter
-from blackop.random_optimizer import propose_points, \
+from kitkopt.hyper_parameter import HyperParameter
+from kitkopt.random_optimizer import propose_points, \
     _get_new_unique_point, minimize_function
-from blackop.hypergrid import not_in_array, get_hypergrid, prune_hypergrid
-from blackop.utilities import debugtool, OptimizerError
+from kitkopt.hypergrid import not_in_array, get_hypergrid, prune_hypergrid
+from kitkopt.utilities import debugtool, OptimizerError
 
 
 class RandomOptimizerTest(unittest.TestCase):

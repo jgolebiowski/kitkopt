@@ -4,7 +4,7 @@ from typing import List
 import numba
 import numpy as np
 
-from blackop.hyper_parameter import HyperParameter
+from kitkopt.hyper_parameter import HyperParameter
 
 
 @numba.jit(
