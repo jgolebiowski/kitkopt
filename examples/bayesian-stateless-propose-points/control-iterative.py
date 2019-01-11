@@ -22,8 +22,9 @@ def main():
     tested_points = np.empty((0, len(hyperparam_config)))
     tested_values = np.empty((0, 1))
 
-    # ------ Decide the number of points to be proposed each iteration
-    num_points = 4
+    # ------ Decide the number of points to be proposed each iteration,
+    # ------ here one is chosen to use UCB acquisition function
+    num_points = 1
 
     # ------ Define the GP parameters including the kernel and its parameters
     gp_settings = dict(
@@ -38,7 +39,8 @@ def main():
     for idx in range(MAXIMUM_ITER):
         # ------ Ask the optimizer for new points
         new_points = propose_points(tested_points, tested_values, hyperparam_config,
-                                    num_points=num_points, gp_settings=gp_settings)
+                                    num_points=num_points, acquisition_function="UCB",
+                                    gp_settings=gp_settings)
         new_values = function2minimize(new_points)
         new_values = np.expand_dims(new_values, 1)
 

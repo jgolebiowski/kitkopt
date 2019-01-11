@@ -6,6 +6,7 @@ import tst.test_rescale
 import tst.test_hypergrid
 import tst.test_random_optimizer
 import tst.test_bayesian_optimizer
+import tst.test_acquisition
 
 
 def main():
@@ -20,6 +21,7 @@ def main():
     suite.addTest(loader.loadTestsFromModule(tst.test_hypergrid))
     suite.addTest(loader.loadTestsFromModule(tst.test_random_optimizer))
     suite.addTest(loader.loadTestsFromModule(tst.test_bayesian_optimizer))
+    suite.addTest(loader.loadTestsFromModule(tst.test_acquisition))
 
     # Run tests
     runner = unittest.TextTestRunner(verbosity=3)

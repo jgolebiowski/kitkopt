@@ -34,10 +34,12 @@ def main():
 
     # ------ Ask the optimizer for new points
     new_points = propose_points(tested_points, values, hyperparam_config,
-                                num_points=num_points, seed=123, gp_settings=gp_settings)
+                                num_points=num_points, seed=123,
+                                acquisition_function="Thompson", gp_settings=gp_settings)
 
     # ------ pritn the proposed points
-    print(result)
+    print("Proposed points:")
+    print(new_points)
 
 
 if (__name__ == '__main__'):

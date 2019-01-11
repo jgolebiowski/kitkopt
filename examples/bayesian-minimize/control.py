@@ -29,6 +29,7 @@ def main():
                                                tolerance=1e-2,
                                                max_iterations=100,
                                                seed=123,
+                                               acquisition_function="UCB",
                                                gp_settings=gp_settings)
     print("Best point {point} with the value of {value}".format(point=best_point, value=best_value))
 

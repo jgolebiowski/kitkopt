@@ -19,7 +19,7 @@ best_point, best_value = minimize_function(function2minimize,
                                            tolerance=1e-2,
                                            max_iterations=100)
 ```
-Currently supported optimizers are based on sampling from a uniform distribution (random_optimizer) and a thompson sampling from a multi-varied gaussian based on a Gaussian Process Regressor (bayesian_optimizer). See the **examples** directory for more use-cases.
+Currently supported optimizers are based on sampling from a uniform distribution (random_optimizer) and a Bayesian optimiser based on a Gaussian Process Regressor with Thompson Sampling and Upper Confidence Bound acquisition functions(bayesian_optimizer). See the **examples** directory for more use-cases.
 
 ## Simple Example
 The simplest application to function mimization involves (examples/bayesian-minimize)

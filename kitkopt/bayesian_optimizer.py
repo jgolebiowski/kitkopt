@@ -1,38 +1,16 @@
 import numpy as np
 from typing import List, Dict, Tuple, Callable
 
+from kitkopt.acquisition import _get_new_unique_points_Thompson, _get_new_unique_point_UCB
 from kitkopt.gaussian_process import GaussianProcessRegression
 from kitkopt.kernels import rbf
 from kitkopt.utilities import OptimizerError
-from kitkopt.hypergrid import not_in_array, get_hypergrid, prune_hypergrid
+from kitkopt.hypergrid import get_hypergrid, prune_hypergrid
 from kitkopt.rescale import rescale_hypergrid, rescale_vector
 from kitkopt.hyper_parameter import HyperParameter
 
 MIN_VALUE = -1
 MAX_VALUE = 1
-
-
-def _get_new_unique_point(new_points_so_far: np.ndarray,
-                          hypergrid: np.ndarray,
-                          gp: GaussianProcessRegression,
-                          max_iter: int = 100) -> np.ndarray:
-    """
-    Propose a new point, different from the ones proposed before
-
-    :param new_points_so_far: points already proposed in shape (n_points, n_hyperparams)
-    :param hypergrid: grid with previously untested combinations
-    :param gp: Gaussian Process Regressor that has been fit to previous points
-    :param max_iter: Maxium number of tries for drawing new points
-    :return: new point, different from the ones proposed before
-    """
-
-    for idx in range(max_iter):
-        sample = gp.sample()
-        minid = np.argmin(sample)
-        proposed_point = hypergrid[minid, :]
-        if not_in_array(proposed_point, new_points_so_far):
-            return proposed_point
-    raise OptimizerError("Could not find a new unique point within iteration number!")
 
 
 def _propose_new_points(
@@ -42,6 +20,7 @@ def _propose_new_points(
         hypergrid: np.ndarray,
         hyperparams_config: List[HyperParameter],
         num_points: int,
+        acquisition_function: str,
         gp_settings: Dict) -> Tuple[np.ndarray, np.ndarray]:
     """
     Propose new points, given old ones
@@ -52,6 +31,7 @@ def _propose_new_points(
     :param hypergrid: grid with previously untested combinations
     :param hyperparams_config: List of hyperparameters
     :param num_points: Number of points to return
+    :param acquisition_function: "Thompson" for thompson sampling or "UCB" for Upper condence bound
     :param gp_settings: settings for the GaussianProcessRegressor: kernel, kernel_params and noise
     :return:
         - Updated hypergrid
@@ -78,11 +58,14 @@ def _propose_new_points(
                                                 MIN_VALUE, MAX_VALUE)
         gp.fit(rescaled_tested_points, rescaled_tested_values, rescaled_hypergrid)
 
-    maxvalue = hyperparams_config[0].upper_bound + 1
-    new_points = np.ones((num_points, len(hyperparams_config)), dtype=float) * maxvalue
-
-    for idx in range(num_points):
-        new_points[idx, :] = _get_new_unique_point(new_points, hypergrid, gp)
+    if acquisition_function == "Thompson":
+        new_points = _get_new_unique_points_Thompson(hypergrid, gp, num_points)
+    elif acquisition_function == "UCB":
+        if num_points != 1:
+            raise ValueError("Only one point can be requested when using UCB acquisition function!")
+        new_points = _get_new_unique_point_UCB(hypergrid, gp)
+    else:
+        raise ValueError("Must select one from Thompson or UCB while {} was chosen!".format(acquisition_function))
 
     return hypergrid, new_points
 
@@ -92,6 +75,7 @@ def propose_points(tested_points: np.ndarray,
                    hyperparams_config: List[HyperParameter],
                    num_points: int,
                    seed: int = None,
+                   acquisition_function: str = "Thompson",
                    gp_settings: Dict = None) -> np.ndarray:
     """
     Propose new points to test based on past values. The proposed points should leaad function minimum values
@@ -101,6 +85,7 @@ def propose_points(tested_points: np.ndarray,
     :param hyperparams_config: List of hyperparameters
     :param num_points: number of points to propose
     :param seed: randomizer seed
+    :param acquisition_function: "Thompson" for thompson sampling or "UCB" for Upper condence bound
     :param gp_settings: settings for the GaussianProcessRegressor: kernel, kernel_params and noise
     :return: New points to test with dims (num_points, n_hyperparameters)
     """
@@ -127,6 +112,7 @@ def propose_points(tested_points: np.ndarray,
         hypergrid,
         hyperparams_config,
         num_points,
+        acquisition_function,
         gp_settings)
 
     return new_points
@@ -138,6 +124,7 @@ def minimize_function(function: Callable,
                       tolerance: float = 1e-2,
                       max_iterations: int = 1000,
                       seed: int = None,
+                      acquisition_function: str = "UCB",
                       gp_settings: Dict = None) -> Tuple[np.ndarray, float]:
     """
     Find the minimum of a function
@@ -150,6 +137,7 @@ def minimize_function(function: Callable,
     :param tolerance: Convergence tolerance, the optimization stops if (last_best_value - new_best_value) < tolerance
     :param max_iterations: Maximum allowed number of iterations
     :param seed: randomizer seed
+    :param acquisition_function: "Thompson" for thompson sampling or "UCB" for Upper condence bound
     :param gp_settings: settings for the GaussianProcessRegressor: kernel, kernel_params and noise
 
     :return:
@@ -188,6 +176,7 @@ def minimize_function(function: Callable,
             hypergrid,
             hyperparams_config,
             num_points,
+            acquisition_function,
             gp_settings)
 
         new_values = np.empty((num_points, 1))
