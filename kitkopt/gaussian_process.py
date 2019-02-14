@@ -19,6 +19,10 @@ class GaussianProcessRegression(object):
         """
         Standard Gaussian Process Regression
 
+        In my implementation of the Baysian optimiser, the GP is only used for prediction once per fitting.
+        As a result I have bundled what is normnally fit() and predict() methods into fit().
+        The predict() now simply returns the means and covariances.
+
         :param kernel: Kernel used ot generate the Gram matrixes for GP regression
         :param kernel_args: Parameters for the kernel
         :param noise: optional sigma^2 noise for of the measurements
