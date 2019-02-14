@@ -46,14 +46,20 @@ class GaussianProcessRegression(object):
         Ks = self.kernel(x_train, x_predict, *self.kernel_args)
         Kss = self.kernel(x_predict, x_predict, *self.kernel_args)
 
-        # Fit the GP
-        alpha = np.linalg.solve(K, y_train)
-        v = Ks.T @ np.linalg.solve(K, Ks)
-
+        # ------ Fit the GP
+        Linv = np.linalg.inv(np.linalg.cholesky(K))
+        alpha = Linv.T @ Linv @ y_train
+        v = Linv @ Ks
         self.mu = Ks.T @ alpha
-        self.cov = Kss - v
-        self.sigmas = np.sqrt(np.diag(self.cov)).reshape(-1, 1)
+        self.cov = Kss - np.dot(v.T, v)
 
+        # Kinv = np.linalg.inv(K)
+        # alpha = Kinv @ y_train
+        # v = Ks.T @ Kinv @ Ks
+        # self.mu = Ks.T @ alpha
+        # self.cov = Kss - v
+
+        self.sigmas = np.sqrt(np.diag(self.cov)).reshape(-1, 1)
         self.cov += np.eye(self.cov.shape[0]) * SINGULARITY_PREVENTION
 
     def initialize(self, x_predict: np.ndarray) -> None:
